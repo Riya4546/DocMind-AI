@@ -8,6 +8,7 @@ export default function Home() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [history, setHistory] = useState<string[]>([]);
 
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -15,6 +16,10 @@ export default function Home() {
     if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
     }
+    setHistory((prev) => [
+  event.target.files![0].name,
+  ...prev,
+]);
   };
 
   const processDocument = async () => {
@@ -28,11 +33,53 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="flex min-h-screen bg-black text-white">
+      <aside className="hidden w-80 border-r border-white/10 bg-white/5 p-6 lg:block">
+
+  {/* Logo */}
+  <h1 className="text-3xl font-bold">
+    DocMind AI
+  </h1>
+
+  {/* Divider */}
+  <div className="my-8 border-t border-white/10"></div>
+
+  {/* Recent Documents */}
+  <div>
+
+    <h2 className="text-xl font-semibold">
+      Recent Documents
+    </h2>
+
+    <div className="mt-6 space-y-4">
+
+      {history.length === 0 ? (
+        <p className="text-gray-400">
+          No documents uploaded yet.
+        </p>
+      ) : (
+        history.map((fileName, index) => (
+          <div
+            key={index}
+            className="rounded-xl border border-white/10 bg-black/40 p-4"
+          >
+            <p className="truncate font-medium">
+              {fileName}
+            </p>
+          </div>
+        ))
+      )}
+
+    </div>
+
+  </div>
+
+</aside>
+<div className="flex-1">
 
       {/* Navbar */}
-      <nav className="flex items-center justify-between border-b border-white/10 px-8 py-6">
-        <h1 className="text-2xl font-bold">DocMind AI</h1>
+      <nav className="flex justify-end border-b border-white/10 px-8 py-6">
+       
 
         <button className="rounded-lg bg-white px-5 py-2 font-medium text-black hover:bg-gray-200 transition">
           Dashboard
@@ -125,6 +172,7 @@ export default function Home() {
         </div>
 
       </section>
+      </div>
 
     </main>
   );
