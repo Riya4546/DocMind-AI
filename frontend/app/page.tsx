@@ -1,9 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import {useRef, useState } from "react";
+import { Upload } from "lucide-react";
+
 
 export default function Home() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -11,6 +15,16 @@ export default function Home() {
     if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
     }
+  };
+
+  const processDocument = async () => {
+    if (!selectedFile) return;
+
+    setIsProcessing(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    setIsProcessing(false);
   };
 
   return (
@@ -54,25 +68,29 @@ export default function Home() {
             Supported formats: PDF, PNG, JPG
           </p>
 
-          {/* Upload Box */}
-          <label className="mt-8 flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-white/20 p-16 transition hover:border-white/40 hover:bg-white/5">
+          <div
+  onClick={() => fileInputRef.current?.click()}
+  className="mt-8 flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-white/20 p-16 transition hover:border-white/40 hover:bg-white/5"
+>
 
-            <input
-              type="file"
-              className="hidden"
-              onChange={handleFileChange}
-            />
+  <input
+    ref={fileInputRef}
+    type="file"
+    className="hidden"
+    onChange={handleFileChange}
+  />
 
-            <p className="text-lg font-medium">
-              Click to upload
-            </p>
+  <Upload className="mb-4 h-12 w-12 text-gray-400" />
 
-            <p className="mt-2 text-sm text-gray-400">
-              or drag and drop
-            </p>
+  <p className="text-lg font-medium">
+    Click to upload
+  </p>
 
-          </label>
+  <p className="mt-2 text-sm text-gray-400">
+    or drag and drop
+  </p>
 
+</div>
           {/* Selected File */}
           {selectedFile && (
             <div className="mt-6 rounded-xl bg-white/10 p-4 text-left">
@@ -88,9 +106,20 @@ export default function Home() {
             </div>
           )}
 
-          {/* Upload Button */}
-          <button className="mt-8 w-full rounded-xl bg-white px-6 py-4 font-semibold text-black transition hover:bg-gray-200">
-            Process Document
+          {/* Process Button */}
+          <button
+            onClick={processDocument}
+            disabled={!selectedFile || isProcessing}
+            className="mt-8 w-full rounded-xl bg-white px-6 py-4 font-semibold text-black transition hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isProcessing ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-black border-t-transparent"></div>
+                Processing...
+              </div>
+            ) : (
+              "Process Document"
+            )}
           </button>
 
         </div>
