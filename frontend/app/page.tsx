@@ -22,15 +22,24 @@ export default function Home() {
 ]);
   };
 
-  const processDocument = async () => {
-    if (!selectedFile) return;
+ const processDocument = async () => {
+  if (!selectedFile) return;
 
-    setIsProcessing(true);
+  setIsProcessing(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+  const response = await fetch(
+    "http://127.0.0.1:8000/process-document",
+    {
+      method: "POST",
+    }
+  );
 
-    setIsProcessing(false);
-  };
+  const data = await response.json();
+
+  setExtractedData(data);
+
+  setIsProcessing(false);
+};
 
   return (
     <main className="flex min-h-screen bg-black text-white">
