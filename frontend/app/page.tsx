@@ -5,8 +5,10 @@ import { Upload } from "lucide-react";
 
 
 export default function Home() {
+ 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [extractedData, setExtractedData] = useState(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [history, setHistory] = useState<string[]>([]);
 
