@@ -19,7 +19,7 @@ export default function Home() {
       setSelectedFile(event.target.files[0]);
     }
     setHistory((prev) => [
-  event.target.files![0].name,
+ event.target.files?.[0]?.name || "",
   ...prev,
 ]);
   };
@@ -30,18 +30,21 @@ export default function Home() {
   try {
     setIsProcessing(true);
 
+    const formData = new FormData();
+
+    formData.append("file", selectedFile);
+
     const response = await fetch(
       "http://127.0.0.1:8000/process-document",
       {
         method: "POST",
+        body: formData,
       }
     );
 
     const data = await response.json();
 
     setExtractedData(data);
-
-    console.log(data);
 
   } catch (error) {
     console.error(error);
@@ -177,6 +180,7 @@ export default function Home() {
             disabled={!selectedFile || isProcessing}
             className="mt-8 w-full rounded-xl bg-white px-6 py-4 font-semibold text-black transition hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
           >
+            
             {isProcessing ? (
               <div className="flex items-center justify-center gap-2">
                 <div className="h-5 w-5 animate-spin rounded-full border-2 border-black border-t-transparent"></div>
@@ -186,6 +190,19 @@ export default function Home() {
               "Process Document"
             )}
           </button>
+          {extractedData && (
+  <div className="mt-6 rounded-xl bg-white/10 p-4 text-left">
+    
+    <h3 className="text-lg font-semibold">
+      Extracted Data
+    </h3>
+
+    <pre className="mt-3 overflow-auto text-sm text-gray-300">
+      {JSON.stringify(extractedData, null, 2)}
+    </pre>
+
+  </div>
+)}
 
         </div>
 
