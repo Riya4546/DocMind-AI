@@ -27,20 +27,27 @@ export default function Home() {
  const processDocument = async () => {
   if (!selectedFile) return;
 
-  setIsProcessing(true);
+  try {
+    setIsProcessing(true);
 
-  const response = await fetch(
-    "http://127.0.0.1:8000/process-document",
-    {
-      method: "POST",
-    }
-  );
+    const response = await fetch(
+      "http://127.0.0.1:8000/process-document",
+      {
+        method: "POST",
+      }
+    );
 
-  const data = await response.json();
+    const data = await response.json();
 
-  setExtractedData(data);
+    setExtractedData(data);
 
-  setIsProcessing(false);
+    console.log(data);
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setIsProcessing(false);
+  }
 };
 
   return (
