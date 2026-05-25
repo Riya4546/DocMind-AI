@@ -190,16 +190,27 @@ export default function Home() {
               "Process Document"
             )}
           </button>
-          {extractedData && (
-  <div className="mt-6 rounded-xl bg-white/10 p-4 text-left">
-    
-    <h3 className="text-lg font-semibold">
-      Extracted Data
+        {extractedData && (
+  <div className="mt-6 rounded-xl bg-white/10 p-6">
+
+    <h3 className="mb-6 text-2xl font-semibold">
+      Important Extracted Content
     </h3>
 
-    <pre className="mt-3 overflow-auto text-sm text-gray-300">
-      {JSON.stringify(extractedData, null, 2)}
-    </pre>
+    <div className="space-y-3">
+
+      {extractedData.important_data?.map(
+        (line: string, index: number) => (
+          <div
+            key={index}
+            className="rounded-lg bg-black/30 p-4 text-gray-300"
+          >
+            {line}
+          </div>
+        )
+      )}
+
+    </div>
 
   </div>
 )}
